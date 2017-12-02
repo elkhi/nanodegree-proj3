@@ -209,7 +209,7 @@ def sub_words(split_string, selected_words):
 
 		
 
-
+print 'penis'
 
 tries_left = user_tries()
 user_difficulty = user_difficulty()
