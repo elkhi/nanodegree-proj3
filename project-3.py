@@ -76,11 +76,8 @@ Pythonistas, and Pythoneers.
 
 '''
 
-#word = 'language'
-#key_number = 'word_1'
-
-user_difficulty = "easy"#raw_input('\nType in your selected difficulty (easy, medium, or hard):'
-#Raw input user chooses difficulty, easy, medium, or hard
+string_dict = {'easy' : easy_string, 'medium' : medium_string, 'hard' : hard_string}
+words_dict = {'easy' : easy_words, 'medium' : medium_words, 'hard' : hard_words}
 
 
 def user_tries():
@@ -99,56 +96,33 @@ def user_tries():
 				custom_tries = raw_input('Please enter how many tries you would like:')
 				while custom_tries.isdigit() != True:
 					custom_tries = raw_input('Please enter an integer number')
-				print 'You have selected ', custom_tries , ' tries.'
-				return custom_tries
+				print 'You have selected', custom_tries , 'tries.'
+				return int(custom_tries)
 	
+
 def user_difficulty():
 #prompts user to select a difficulty from easy, medium or hard
 	print '\nPlease select your difficulty, options are easy, medium or hard.'
 	difficulty_choice = ''
-	while difficulty_choice != 'easy' or 'medium' or 'hard':
+	acceptable_difficulties = ['easy', 'medium', 'hard']
+	
+	while difficulty_choice not in acceptable_difficulties:
 			difficulty_choice = raw_input ('Please enter easy, medium or hard: ')
 			
-			if difficulty_choice == 'easy' or 'medium' or 'hard':
+			if difficulty_choice in acceptable_difficulties:
 				print '\nYou have selected ', difficulty_choice, ' difficulty.'
-				return 'difficulty_choice'
-
-
-def selected_string(user_difficulty):
-#Passes in user selected difficulty and sets the string to be modified, or prompts user to check spelling if input does not
-#match one of the three difficulty levels allowed.
-	
-	if user_difficulty == "easy":
-		return easy_string
-		
-	elif user_difficulty == "medium":
-		return medium_string
-		
-	elif user_difficulty == "hard":
-		return hard_string
-		
-	else:
-		print "Acceptable difficulty choices are: easy, medium or hard. Please try again."
-
-def selected_words(user_difficulty):
-#Passes in user selected difficulty and sets the list to be checked against for rest of function.
-	
-	if user_difficulty == "easy":
-		return easy_words
-		
-	elif user_difficulty == "medium":
-		return medium_words
-		
-	elif user_difficulty == "hard":
-		return hard_words
-		
+				return difficulty_choice
 
 
 
 def check_word(user_input,answer_list,position):
 #Passes in word input by user, removes capitalisation and then checks if word is equal to active element in selected list
 #If OK, returns word input, otherwise, returns None.
-	if user_input.lower() == answer_list[0]:
+	user_compare = user_input.lower()
+	answer_index = position - 1
+	answer_compare = answer_list[answer_index]
+
+	if user_compare == answer_compare:
 		
 		return True
 	return None
@@ -162,7 +136,7 @@ def split_string(selected_string, maxsplit = 0):
 	return re.split(regexPattern, selected_string, maxsplit)
 
 
-def sub_words(split_string, selected_words):
+def sub_words(split_string, selected_words, selected_string, tries_left):
 #Main function:
 #	Initialises with an empty, unsubstituted list
 #	For every element of the selected answer list:
@@ -183,36 +157,52 @@ def sub_words(split_string, selected_words):
 #	
 	
 	
-	split_string = split_string(selected_string(user_difficulty))
-	answer_list = selected_words(user_difficulty)
-	result_list = []
+	#result_list = []
 
-	for position, value in enumerate(answer_list,1):
-		answer_position = 'word_' + str(position)
+	for position, value in enumerate(selected_words,1):
+		answer_position = 'word ' + str(position)
 		
 		printed_string = "".join(split_string)
 		
-		#print "---------------------------------------------------------------\n\
-#The current paragraph reads:\n", result_list
-		user_input = 'language'#raw_input('\nType in your answer for: ' + answer_position
+		print "---------------------------------------------------------------\n\
+The current paragraph reads:\n\n", printed_string
 		
-		if check_word(user_input,answer_list,position):
-
+		user_input = raw_input('\n\nType in your answer for ' + answer_position + ': ')
+		
+		while check_word(user_input,selected_words,position) == None:
+			print check_word(user_input,selected_words,position)
+			if tries_left > 1:
+				tries_left = tries_left -1
+				print '\nPlease try again, you have', tries_left, 'tries left.'
+				user_input = raw_input('\n\nType in your answer for ' + answer_position + ': ')
+			else:
+				print 'That was incorrect and you have no tries left, goodbye!'
+				return None
+		if check_word(user_input,selected_words,position) != None:
+			'''
+			result_list = [n.replace(answer_position, ) for n in split_string]
 			for n in split_string:
 				
 				if n == answer_position:
-					n = n.replace(answer_position, answer_list[0])
+					n = n.replace(answer_position, selected_words[0])
 					result_list.append(n)
 				else:
 					result_list.append(n)
-			print "".join(result_list)
+			print "".join(result_list)'''
+			print '\nThat is correct!'
+			
+
 
 		
 
-print 'no more penis'
+
 
 tries_left = user_tries()
 user_difficulty = user_difficulty()
-print tries_left
-sub_words(split_string, selected_words)
+
+selected_string = string_dict[user_difficulty]
+selected_words = words_dict[user_difficulty]
+print selected_string
+
+sub_words(split_string, selected_words,selected_string, tries_left)
 
