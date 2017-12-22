@@ -4,14 +4,14 @@
 
 #For the easy quiz, the text is from the header, the replaced words have been defined as the values of easy_words below:
 
-easy_words = ['language', 'programming', 'whitespace', 'readability']
+easy_words = ['programming', 'language', 'whitespace', 'readability']
 
 easy_string = """
-Python is a widely used high-level __word_2__ __word_1__ for general-purpose __word_2__,
-created by Guido van Rossum and first released in 1991. An interpreted __word_1__, Python has a 
+Python is a widely used high-level __word_1__ __word_2__ for general-purpose __word_1__,
+created by Guido van Rossum and first released in 1991. An interpreted __word_2__, Python has a 
 design philosophy that emphasizes code __word_4__ (notably using __word_3__ indentation to delimit 
 code blocks rather than curly brackets or keywords), and a syntax that allows programmers to express 
-concepts in fewer lines of code than might be used in __word_1__s such as C++ or Java. The __word_1__ provides 
+concepts in fewer lines of code than might be used in __word_1__s such as C++ or Java. The __word_2__ provides 
 constructs intended to enable writing clear programs on both a small and large scale."""
 
 
@@ -20,12 +20,12 @@ constructs intended to enable writing clear programs on both a small and large s
 medium_words = ['paradigm', 'garbage', 'Beautiful', 'implicit', 'Complicated']
 
 medium_string = '''
-Python is a multi-(word 1) programming language: object-oriented programming and structured programming are fully 
+Python is a multi-__word_1__ programming language: object-oriented programming and structured programming are fully 
 supported, and many language features support functional programming and aspect-oriented programming (including by
-metaprogramming and metaobjects (magic methods)). Many other (word 1)s are supported via extensions, including design 
+metaprogramming and metaobjects (magic methods)). Many other __word_1__s are supported via extensions, including design 
 by contract and logic programming.
 
-Python uses dynamic typing and a mix of reference counting and a cycle-detecting (word 2) collector for memory management. 
+Python uses dynamic typing and a mix of reference counting and a cycle-detecting __word_2__ collector for memory management. 
 An important feature of Python is dynamic name resolution (late binding), which binds method and variable names during program execution.
 
 The design of Python offers some support for functional programming in the Lisp tradition. The language has filter(), map(), 
@@ -34,10 +34,10 @@ two modules (itertools and functools) that implement functional tools borrowed f
 
 The core philosophy of the language is summarized by the document The Zen of Python (PEP 20), which includes aphorisms such as:
 
-    (word 3) is better than ugly
-    Explicit is better than (word 4)
+    __word_3__ is better than ugly
+    Explicit is better than __word_4__
     Simple is better than complex
-    Complex is better than (word 5)
+    Complex is better than __word_5__
     Readability counts
 
 '''
@@ -47,7 +47,7 @@ The core philosophy of the language is summarized by the document The Zen of Pyt
 hard_words = ['functionality', 'core', 'optimization', 'Cython', 'Monty Python', 'pythonic', 'unpythonic']
 
 hard_string = '''
-Rather than requiring all desired (word 1) to be built into the language's (word 2), Python was designed to be highly extensible. 
+Rather than requiring all desired __word_1__ to be built into the language's __word_2__, Python was designed to be highly extensible. 
 Python can also be embedded in existing applications that need a programmable interface. This design of a small core language 
 with a large standard library and an easily extensible interpreter was intended by Van Rossum from the start because of his 
 frustrations with ABC, which espoused the opposite mindset.
@@ -57,19 +57,19 @@ sparser, less-cluttered grammar. As Alex Martelli put it: "To describe something
 Python culture." Python's philosophy rejects the Perl "there is more than one way to do it" approach to language design in favor 
 of "there should be one - and preferably only one - obvious way to do it".
 
-Python's developers strive to avoid premature (word 3), and moreover, reject patches to non-critical parts of CPython that 
+Python's developers strive to avoid premature __word_3__, and moreover, reject patches to non-critical parts of CPython that 
 would offer a marginal increase in speed at the cost of clarity. When speed is important, a Python programmer can move time-critical 
-functions to extension modules written in languages such as C, or try using PyPy, a just-in-time compiler. (word 4) is also available, 
+functions to extension modules written in languages such as C, or try using PyPy, a just-in-time compiler. __word_4__ is also available, 
 which translates a Python script into C and makes direct C-level API calls into the Python interpreter.
 
 An important goal of Python's developers is making it fun to use. This is reflected in the origin of the name, which comes from 
-(word 5), and in an occasionally playful approach to tutorials and reference materials, such as using examples that refer to 
+__word_5__, and in an occasionally playful approach to tutorials and reference materials, such as using examples that refer to 
 spam and eggs instead of the standard foo and bar.
 
-A common neologism in the Python community is (word 6), which can have a wide range of meanings related to program style. To say 
-that code is (word 6) is to say that it uses Python idioms well, that it is natural or shows fluency in the language, that it 
+A common neologism in the Python community is __word_6__, which can have a wide range of meanings related to program style. To say 
+that code is __word_6__ is to say that it uses Python idioms well, that it is natural or shows fluency in the language, that it 
 conforms with Python's minimalist philosophy and emphasis on readability. In contrast, code that is difficult to understand or 
-reads like a rough transcription from another programming language is called (word 7).
+reads like a rough transcription from another programming language is called __word_7__.
 
 Users and admirers of Python, especially those considered knowledgeable or experienced, are often referred to as Pythonists, 
 Pythonistas, and Pythoneers.
@@ -128,7 +128,7 @@ def check_word(user_input,answer_list,position):
 	return None
 
 
-def split_string(selected_string, maxsplit = 0):
+def string_tosplit(selected_string, maxsplit = 0):
 # Passes in the selected string and splits along selected delimiters
 	import re
 	delimiters = '__',
@@ -136,7 +136,7 @@ def split_string(selected_string, maxsplit = 0):
 	return re.split(regexPattern, selected_string, maxsplit)
 
 
-def sub_words(split_string, selected_words, selected_string, tries_left):
+def sub_words(selected_words, selected_string, tries_left):
 #Main function:
 #	Initialises with an empty, unsubstituted list
 #	For every element of the selected answer list:
@@ -157,8 +157,8 @@ def sub_words(split_string, selected_words, selected_string, tries_left):
 #	
 	
 	
-	#result_list = []
-
+	result_list = []
+	split_string = string_tosplit(selected_string)
 	for position, value in enumerate(selected_words,1):
 		answer_position = 'word ' + str(position)
 		
@@ -202,7 +202,7 @@ user_difficulty = user_difficulty()
 
 selected_string = string_dict[user_difficulty]
 selected_words = words_dict[user_difficulty]
-print selected_string
 
-sub_words(split_string, selected_words,selected_string, tries_left)
+
+sub_words(selected_words,selected_string, tries_left)
 
