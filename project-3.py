@@ -104,12 +104,13 @@ def user_tries():
 #Asks user whether they are happy with 5 tries
 	print 'Are you happy with 5 tries?'
 	tries_choice = ''
+	default_tries = 5
 	while tries_choice != 'y' or 'n':
 			
 			tries_choice = raw_input ('Please enter y or n:')
 			if tries_choice == 'y':
-				print 'You have selected the standard 5 tries.'
-				return 5
+				print 'You have selected the standard ', default_tries,' tries.'
+				return default_tries
 				
 			elif tries_choice == 'n':
 			#Gets user to input manual number of tries, ensures input is a positive integer
@@ -135,91 +136,147 @@ def user_difficulty():
 
 
 
-def check_word(user_input,answer_list,position):
-#Passes in word input by user, removes capitalisation and then checks if word is equal to active element in selected list
-#If OK, returns word input, otherwise, returns None.
+def check_word(user_input,answer_list,position, answer_position):
+#
+	'''
+Inputs:
+		1. user_input:	raw input by user, passed in from external function
+		2. answer_list:	answer list used for quiz, has correct answers expected
+		3. position:	active position in answer list, note this starts from 1 due to enumerate but list
+						index starts from 0. Therefore, assigned with 1 subtracted to answer_index
+
+Behaviour:
+		Passes in word input by user, removes capitalisation and then checks if word is equal to active 
+		element in selected list. If OK, returns word input, otherwise, returns None.
+
+Outputs:
+		True or None, if the user input matches the expected answer or not, respectively
+'''	
 	user_compare = user_input.lower()
 	answer_index = position - 1
 	answer_compare = answer_list[answer_index].lower()
-
-	if user_compare == answer_compare:
-		
+	if user_compare == answer_compare:		
 		return True
-	return None
+	return False
+	'''
+		print tries_left
+		tries_left = tries_left -1
+		if tries_left == 0:
+			print 'That was incorrect and you have no tries left, goodbye!'
+			return False
+			
+		print '\nPlease try again, you have', tries_left, 'tries left.'
+		print tries_left
+		user_input = raw_input('\n\nType in your answer for ' + answer_position + ': ')'''
+
+
 
 
 def string_tosplit(selected_string, maxsplit = 0):
-# Passes in the selected string and splits along selected delimiters
+	'''
+	Inputs:
+		1.	selected_string:	active string used for quiz
+
+	Behaviour:
+		Passes in the selected string and splits along selected delimiters
+
+	Outputs:
+		1. split string (later assigned to split_string)
+
+	'''
+ 
 	import re
 	delimiters = '__',
 	regexPattern = '|'.join(map(re.escape, delimiters))
 	return re.split(regexPattern, selected_string, maxsplit)
 
+def check_tries(tries_left, answer_position, user_input):
+	'''
+	Inputs:
+			1. tries_left:		number of tries left at active position in answer list
+			2. answer_position:	current word count being checked against
+			3. user_input:		raw input by user, passed in from external function
+
+	Behaviour:
+			Function only called if check_word gives None i.e. user makes a mistake. Function then checks number of
+			tries left and if >1, subtracts 1. If the number of tries left is 1, triggers lose condition.
+			If user gets correct input, moves on.
+	Outputs:
+			Nothing, or returns lose condition if no more tries left 
+	'''
+	'''	if tries_left > 1:
+		tries_left = tries_left -1
+		print '\nPlease try again, you have', tries_left, 'tries left.'
+		user_input = raw_input('\n\nType in your answer for ' + answer_position + ': ')
+	else:
+		print 'That was incorrect and you have no tries left, goodbye!'
+		return None
+	'''
+
+def run_replace(split_string,answer_position,selected_words,position, result_list):
+
+	for elements in split_string:
+		if elements == answer_position:
+			elements = elements.replace(answer_position, selected_words[position-1])					
+			result_list.append(elements)
+		else:
+			result_list.append(elements)
+	return result_list
+
 
 def sub_words(selected_words, selected_string, tries_left):
-#Main function:
-#	Initialises with an empty, unsubstituted list
-#	For every element of the selected answer list:
-#
-#		1. Joins current state of selected_list into a string, prints string,
-#		2. Asks user for next word (starting at 1)
-#		3. Calls check_word function
-#		4. If word matches, (i.e. return true) replaces all instances of active word placeholders in split_string
-#			with correct capitalisation
-#		5. Joins the substituted list back into a string
-#		6. Moves onto next word
-#	If at any step the user input does not match the active element in the answer list:
-#		1. Subtracts 1 from number of tries left
-#		2. If resultant tries left > 0, goes back to the main loop
-#		3. Else, prints 'game over' string asks user for raw input y/n if they want to start again
-#				If y, calls difficulty function which resets the selected string, the number of tries left
-#				and then re-initialises the list
-#		
-#		Prints final string
-#	
-	
-	
-	
+	'''
+Inputs:
+	1.	selected_words:		Answer list chosen for quiz
+	2.	selected_string:	Answer string being tested against
+	3.	tries_left:			Number of tries left (starting), also used as input to check_tries
+
+Behaviour:
+	Initialises with an empty, unsubstituted list
+	For every element of the selected answer list:
+
+		1. Joins current state of selected_list into a string, prints string,
+		2. Asks user for next word (starting at 1)
+		3. Calls check_word function
+		4. If word matches, (i.e. return true) replaces all instances of active word placeholders in split_string
+			with correct capitalisation
+		5. Joins the substituted list back into a string
+		6. Moves onto next word
+	If at any step the user input does not match the active element in the answer list:
+		1. Subtracts 1 from number of tries left
+		2. If resultant tries left > 0, goes back to the main loop
+		3. Else, prints 'game over' string asks user for raw input y/n if they want to start again
+				If y, calls difficulty function which resets the selected string, the number of tries left
+				and then re-initialises the list
+		
+		Prints final string
+Outputs:
+	1.	Printed string on every iteration
+	2.	Counts tries left
+	3.	Prints substituted (joined) string
+
+	'''
 	split_string = string_tosplit(selected_string)
 	for position, value in enumerate(selected_words,1):
 		result_list = []
 		answer_position = 'word_' + str(position)
-
-		printed_string = "".join(split_string)
 		
-		print "---------------------------------------------------------------\n\
-The current string reads:\n\n", printed_string
-		
+		print "---------------------------------------------------------------\nThe current string reads:\n\n", "".join(split_string)
 		user_input = raw_input('\n\nPlease read the text above and then type in your answer for ' + answer_position + ': ')
 		
-		while check_word(user_input,selected_words,position) == None:
-			
+		while check_word(user_input, selected_words, position, answer_position) == False:
 			if tries_left > 1:
-				tries_left = tries_left -1
+				tries_left = tries_left - 1
 				print '\nPlease try again, you have', tries_left, 'tries left.'
 				user_input = raw_input('\n\nType in your answer for ' + answer_position + ': ')
 			else:
 				print 'That was incorrect and you have no tries left, goodbye!'
-				return None
-		if check_word(user_input, selected_words, position) == True:
+				return None	
+		result_list[:] = run_replace(split_string,answer_position,selected_words,position, result_list)				
+		split_string[:] = result_list
 
-			for n in split_string:
-				
-				if n == answer_position:
-
-					n = n.replace(answer_position, selected_words[position-1])
-					
-					result_list.append(n)
-				else:
-					result_list.append(n)
-					continue
-					
-					
-			split_string[:] = result_list
-
-			print '\nThat is correct!\n'
-	print "---------------------------------------------------------------\n\
-The complete string reads:\n\n", "".join(split_string), '\n\n Well done!'
+		print '\nThat is correct!\n'
+	print "---------------------------------------------------------------\nThe complete string reads:\n\n", "".join(split_string), '\n\n Well done!'
 
 
 user_difficulty = user_difficulty()
