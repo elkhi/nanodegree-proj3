@@ -102,6 +102,8 @@ words_dict = {'easy' : easy_words, 'medium' : medium_words, 'hard' : hard_words}
 
 def user_tries():
 #Asks user whether they are happy with 5 tries
+#Outputs:
+	'''	1. number of tries'''
 	print 'Are you happy with 5 tries?'
 	tries_choice = ''
 	default_tries = 5
@@ -123,6 +125,8 @@ def user_tries():
 
 def user_difficulty():
 #prompts user to select a difficulty from easy, medium or hard
+#Outputs:
+	'''	1. Choice of difficulty'''
 	print '\nPlease select your difficulty, options are easy, medium or hard.'
 	difficulty_choice = ''
 	acceptable_difficulties = ['easy', 'medium', 'hard']
@@ -136,7 +140,7 @@ def user_difficulty():
 
 
 
-def check_word(user_input,answer_list,position, answer_position):
+def check_word(user_input,answer_list,position):
 #
 	'''
 Inputs:
@@ -150,7 +154,7 @@ Behaviour:
 		element in selected list. If OK, returns word input, otherwise, returns None.
 
 Outputs:
-		True or None, if the user input matches the expected answer or not, respectively
+		True or False, if the user input matches the expected answer or not, respectively
 '''	
 	user_compare = user_input.lower()
 	answer_index = position - 1
@@ -158,18 +162,7 @@ Outputs:
 	if user_compare == answer_compare:		
 		return True
 	return False
-	'''
-		print tries_left
-		tries_left = tries_left -1
-		if tries_left == 0:
-			print 'That was incorrect and you have no tries left, goodbye!'
-			return False
-			
-		print '\nPlease try again, you have', tries_left, 'tries left.'
-		print tries_left
-		user_input = raw_input('\n\nType in your answer for ' + answer_position + ': ')'''
-
-
+	
 
 
 def string_tosplit(selected_string, maxsplit = 0):
@@ -190,31 +183,22 @@ def string_tosplit(selected_string, maxsplit = 0):
 	regexPattern = '|'.join(map(re.escape, delimiters))
 	return re.split(regexPattern, selected_string, maxsplit)
 
-def check_tries(tries_left, answer_position, user_input):
-	'''
-	Inputs:
-			1. tries_left:		number of tries left at active position in answer list
-			2. answer_position:	current word count being checked against
-			3. user_input:		raw input by user, passed in from external function
-
-	Behaviour:
-			Function only called if check_word gives None i.e. user makes a mistake. Function then checks number of
-			tries left and if >1, subtracts 1. If the number of tries left is 1, triggers lose condition.
-			If user gets correct input, moves on.
-	Outputs:
-			Nothing, or returns lose condition if no more tries left 
-	'''
-	'''	if tries_left > 1:
-		tries_left = tries_left -1
-		print '\nPlease try again, you have', tries_left, 'tries left.'
-		user_input = raw_input('\n\nType in your answer for ' + answer_position + ': ')
-	else:
-		print 'That was incorrect and you have no tries left, goodbye!'
-		return None
-	'''
 
 def run_replace(split_string,answer_position,selected_words,position, result_list):
+	'''
+Inputs:
+		1. split_string:	iterated list being worked on
+		2. answer_position:	string being sought to replace within split_string
+		3. selected_words:	answer list chosen for quiz (string being substituted in)
+		4. result_list:		substituted resultant list
+Behaviour:
+		Loops through all the elements of split_string, checking if the element is equal to answer_position.
+		If so, replaces with equivalent element from selected_words. Otherwise, adds element to result_list.
+		In the end, returns result_list with replaced entries
+Outputs:
+		1. result_list: substituted product list	
 
+	'''
 	for elements in split_string:
 		if elements == answer_position:
 			elements = elements.replace(answer_position, selected_words[position-1])					
@@ -264,7 +248,7 @@ Outputs:
 		print "---------------------------------------------------------------\nThe current string reads:\n\n", "".join(split_string)
 		user_input = raw_input('\n\nPlease read the text above and then type in your answer for ' + answer_position + ': ')
 		
-		while check_word(user_input, selected_words, position, answer_position) == False:
+		while check_word(user_input, selected_words, position) == False:
 			if tries_left > 1:
 				tries_left = tries_left - 1
 				print '\nPlease try again, you have', tries_left, 'tries left.'
